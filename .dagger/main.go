@@ -124,6 +124,15 @@ func (mod *Checker) PublishContainer(
 	return mod.publishContainer(ctx, sourceDir, tags)
 }
 
+// Check returns a container that runs the checker.
+func (mod *Checker) Check(
+	sourceDir *dagger.Directory,
+) *dagger.Container {
+	c := dag.Container().From("ghcr.io/cryptellation/checker")
+	return mod.withGoCodeAndCacheAsWorkDirectory(c, sourceDir).
+		WithExec([]string{"checker"})
+}
+
 func getDockerTags(ctx context.Context, repo Git) ([]string, error) {
 	tags := make([]string, 0)
 
