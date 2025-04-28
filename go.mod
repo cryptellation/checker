@@ -1,6 +1,6 @@
 module github.com/cryptellation/checker
 
-go 1.24.2
+go 1.23.8
 
 require github.com/spf13/cobra v1.9.1
 
