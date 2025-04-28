@@ -55,6 +55,30 @@ jobs:
           args: >-
             -s publish-tag
             --source-dir=.
-            --token=env:CI_TOKEN
+            --token=env:GITHUB_TOKEN
         env:
-          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-container:
+    name: Publish the container of the new version
+    needs: ["publish-tag"]
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: dagger/dagger-for-github@8.0.0
+        with:
+          version: latest
+          verb: call
+          args: >-
+            -s publish-tag
+            --source-dir=.
+            --token=env:GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
