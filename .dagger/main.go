@@ -124,6 +124,15 @@ func (mod *Checker) PublishContainer(
 	return mod.publishContainer(ctx, sourceDir, tags)
 }
 
+// Check returns a container that runs the checker.
+func (mod *Checker) Check(
+	sourceDir *dagger.Directory,
+) *dagger.Container {
+	c := dag.Container().From("golang:" + goVersion() + "-alpine")
+	return mod.withGoCodeAndCacheAsWorkDirectory(c, sourceDir).
+		WithExec([]string{"go", "run", ".", "--check-invalid-todos=false"})
+}
+
 func getDockerTags(ctx context.Context, repo Git) ([]string, error) {
 	tags := make([]string, 0)
 

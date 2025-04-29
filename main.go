@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	pathFlag string
+	pathFlag              string
+	checkInvalidTodosFlag bool
+	checkTestTagsFlag     bool
 )
 
 var rootCmd = &cobra.Command{
@@ -18,16 +20,28 @@ var rootCmd = &cobra.Command{
 	SilenceUsage: true,
 	Short:        "Check the code based on custom requirements for Cryptellation",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var errInvalidTodos error
+		if checkInvalidTodosFlag {
+			checkInvalidTodos(cmd, args)
+		}
+
+		var errTestTags error
+		if checkTestTagsFlag {
+			errTestTags = checkTestTags(cmd, args)
+		}
+
 		return errors.Join(
-			checkInvalidTodos(cmd, args),
-			checkTestTags(cmd, args),
+			errInvalidTodos,
+			errTestTags,
 		)
 	},
 }
 
 func main() {
 	// Set flags
-	rootCmd.PersistentFlags().StringVarP(&pathFlag, "path", "p", ".", "Set the path to check for invalid todos")
+	rootCmd.PersistentFlags().StringVarP(&pathFlag, "path", "p", ".", "set the path to check for invalid todos")
+	rootCmd.PersistentFlags().BoolVar(&checkInvalidTodosFlag, "check-invalid-todos", true, "check invalid todos")
+	rootCmd.PersistentFlags().BoolVar(&checkTestTagsFlag, "check-test-tags", true, "check test tags")
 	rootCmd.AddCommand(checkTodosCmd)
 	rootCmd.AddCommand(checkTestTagsCmd)
 
