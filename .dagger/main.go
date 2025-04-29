@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/cryptellation/version/dagger/internal/dagger"
+	"github.com/cryptellation/checker/dagger/internal/dagger"
 )
 
 const (
