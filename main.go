@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var errInvalidTodos error
 		if checkInvalidTodosFlag {
-			checkInvalidTodos(cmd, args)
+			errInvalidTodos = checkInvalidTodos(cmd, args)
 		}
 
 		var errTestTags error
