@@ -19,17 +19,17 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/cryptellation/checker/dagger/internal/dagger"
+	"github.com/cryptellation/codechecker/dagger/internal/dagger"
 )
 
 const (
-	dockerImageName = "ghcr.io/cryptellation/checker"
+	dockerImageName = "ghcr.io/cryptellation/codechecker"
 )
 
-type Checker struct{}
+type CodeChecker struct{}
 
 // Publish a new release.
-func (ci *Checker) PublishTag(
+func (ci *CodeChecker) PublishTag(
 	ctx context.Context,
 	sourceDir *dagger.Directory,
 	user *string,
@@ -50,7 +50,7 @@ func (ci *Checker) PublishTag(
 }
 
 // Lint runs golangci-lint on the main repo (./...) only.
-func (ci *Checker) Lint(sourceDir *dagger.Directory) *dagger.Container {
+func (ci *CodeChecker) Lint(sourceDir *dagger.Directory) *dagger.Container {
 	c := dag.Container().
 		From("golangci/golangci-lint:v1.62.0").
 		WithMountedCache("/root/.cache/golangci-lint", dag.CacheVolume("golangci-lint"))
@@ -64,7 +64,7 @@ func (ci *Checker) Lint(sourceDir *dagger.Directory) *dagger.Container {
 }
 
 // LintDagger runs golangci-lint on the .dagger directory only.
-func (ci *Checker) LintDagger(sourceDir *dagger.Directory) *dagger.Container {
+func (ci *CodeChecker) LintDagger(sourceDir *dagger.Directory) *dagger.Container {
 	c := dag.Container().
 		From("golangci/golangci-lint:v1.62.0").
 		WithMountedCache("/root/.cache/golangci-lint", dag.CacheVolume("golangci-lint"))
@@ -78,7 +78,7 @@ func (ci *Checker) LintDagger(sourceDir *dagger.Directory) *dagger.Container {
 }
 
 // UnitTests returns a container that runs the unit tests.
-func (ci *Checker) UnitTests(sourceDir *dagger.Directory) *dagger.Container {
+func (ci *CodeChecker) UnitTests(sourceDir *dagger.Directory) *dagger.Container {
 	c := dag.Container().From("golang:" + goVersion() + "-alpine")
 	return ci.withGoCodeAndCacheAsWorkDirectory(c, sourceDir).
 		WithExec([]string{"sh", "-c",
@@ -87,7 +87,7 @@ func (ci *Checker) UnitTests(sourceDir *dagger.Directory) *dagger.Container {
 }
 
 // Container returns a container with the application built in it.
-func (ci *Checker) Container(
+func (ci *CodeChecker) Container(
 	sourceDir *dagger.Directory,
 	// +optional
 	targetPlatform string,
@@ -120,7 +120,7 @@ func (ci *Checker) Container(
 	})
 }
 
-func (ci *Checker) PublishContainer(
+func (ci *CodeChecker) PublishContainer(
 	ctx context.Context,
 	sourceDir *dagger.Directory,
 ) error {
@@ -142,7 +142,7 @@ func (ci *Checker) PublishContainer(
 }
 
 // Check returns a container that runs the checker.
-func (ci *Checker) Check(
+func (ci *CodeChecker) Check(
 	sourceDir *dagger.Directory,
 ) *dagger.Container {
 	c := dag.Container().From("golang:" + goVersion() + "-alpine")
@@ -182,7 +182,7 @@ func getDockerTags(ctx context.Context, repo Git) ([]string, error) {
 }
 
 // Publishes the worker docker image.
-func (ci *Checker) publishContainer(
+func (ci *CodeChecker) publishContainer(
 	ctx context.Context,
 	sourceDir *dagger.Directory,
 	tags []string,
@@ -218,11 +218,11 @@ func goVersion() string {
 	return runtime.Version()[2:]
 }
 
-func (ci *Checker) withGoCodeAndCacheAsWorkDirectory(
+func (ci *CodeChecker) withGoCodeAndCacheAsWorkDirectory(
 	c *dagger.Container,
 	sourceDir *dagger.Directory,
 ) *dagger.Container {
-	containerPath := "/go/src/github.com/cryptellation/checker"
+	containerPath := "/go/src/github.com/cryptellation/codechecker"
 	return c.
 		// Add Go caches
 		WithMountedCache("/root/.cache/go-build", dag.CacheVolume("gobuild")).

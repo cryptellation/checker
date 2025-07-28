@@ -15,7 +15,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:          "checker",
+	Use:          "codechecker",
 	Version:      "1.0.0",
 	SilenceUsage: true,
 	Short:        "Check the code based on custom requirements for Cryptellation",

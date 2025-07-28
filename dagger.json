@@ -1,6 +1,6 @@
 {
-  "name": "checker",
-  "engineVersion": "v0.18.12",
+  "name": "CodeChecker",
+  "engineVersion": "v0.18.14",
   "sdk": {
     "source": "go"
   },

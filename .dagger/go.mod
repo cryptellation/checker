@@ -1,4 +1,4 @@
-module github.com/cryptellation/checker/dagger
+module github.com/cryptellation/codechecker/dagger
 
 go 1.23.8
 
