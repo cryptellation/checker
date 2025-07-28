@@ -43,7 +43,7 @@ func checkInvalidTodosOnDir(path string) ([]string, error) {
 		}
 
 		switch {
-		case strings.HasPrefix(path, "tools/checker"):
+		case strings.HasPrefix(path, "tools/codechecker"):
 			// Return if this is the path to the tool
 			return nil
 		case strings.Contains(path, "dagger/internal"):

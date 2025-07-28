@@ -1,4 +1,4 @@
-module github.com/cryptellation/checker
+module github.com/cryptellation/codechecker
 
 go 1.23.8
 

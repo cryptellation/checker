@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/cryptellation/checker/dagger/internal/dagger"
+	"github.com/cryptellation/codechecker/dagger/internal/dagger"
 )
 
 // Git provides access to a git repository.
@@ -41,7 +41,7 @@ func NewGit(ctx context.Context, opts NewGitOptions) (Git, error) {
 		// Change the url to use the token
 		container, err = container.WithExec([]string{
 			"git", "remote", "set-url", "origin",
-			"https://" + *opts.User + ":" + tokenString + "@github.com/cryptellation/checker.git",
+			"https://" + *opts.User + ":" + tokenString + "@github.com/cryptellation/codechecker.git",
 		}).Sync(ctx)
 		if err != nil {
 			return Git{}, err
